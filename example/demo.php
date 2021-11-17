@@ -17,14 +17,9 @@ $matomo->setLanguage('en');
 
 // $matomo->verifySsl = false;
 
-$test = $matomo->getApi();
+try {
+	$test = $matomo->getApi();
 
-if ($matomo->hasError()) {
-	echo '<p>Invalid request</p>';
-	echo '<pre>';
-	var_dump($matomo->getErrors());
-	echo '</pre>';
-} else {
 	//Default time period: yesterday
 	$visits = $matomo->getVisits();
 	$visitsU = $matomo->getUniqueVisitors();
@@ -36,7 +31,7 @@ if ($matomo->hasError()) {
 	$matomo->setDate(date('Y-m-d'));
 
 	$visitsYear = $matomo->getVisits();
-	$visitsUYear = $matomo->getUniqueVisitors(); // To enable see https://matomo.org/faq/how-to/faq_113/
+	//$visitsUYear = $matomo->getUniqueVisitors(); // To enable see https://matomo.org/faq/how-to/faq_113/
 	$visitsLYear = $matomo->getSumVisitsLengthPretty();
 
 	//Change time period to range
@@ -69,18 +64,11 @@ if ($matomo->hasError()) {
 		<li>Summary of the visit lengths: <?php echo ($visitsLRange !== false) ? $visitsLRange : 0; ?></li>
 	</ul>
 
-	<?php if ($matomo->hasError()): ?>
-		<h2>Error Summary</h2>
-		<ul>
-			<?php foreach ($matomo->getErrors() as $error): ?>
-				<li><?php echo $error; ?></li>
-			<?php endforeach; ?>
-		</ul>
-	<?php else: ?>
-		<p><strong>No errors!</strong></p>
-	<?php endif; ?>
-
 <?php
+} catch (Exception $e) {
+	echo '<pre>';
+	var_dump($e);
+	echo '</pre>';
 }
 ?>
 	</body>
